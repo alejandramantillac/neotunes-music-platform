@@ -4,6 +4,11 @@ package model;
  *
  * @author Alejandra
  */
-public class Consumer {
+public abstract class Consumer extends User {
+
+    public Consumer(String nickname, String id, String registrationDate) {
+        super(nickname, id, registrationDate);
+    }
+    
     
 }

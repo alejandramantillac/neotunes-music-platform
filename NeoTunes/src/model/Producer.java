@@ -4,15 +4,24 @@ package model;
  *
  * @author Alejandra
  */
-public abstract class Producer {
+public abstract class Producer extends User{
+    private int type;
     private String name;
-    private String registrationDate;
     private String url;
 
-    public Producer(String name, String registrationDate, String url) {
+    public Producer(int type, String name, String url, String nickname, String id, String registrationDate) {
+        super(nickname, id, registrationDate);
+        this.type = type;
         this.name = name;
-        this.registrationDate = registrationDate;
         this.url = url;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public String getName() {
@@ -23,20 +32,17 @@ public abstract class Producer {
         this.name = name;
     }
 
-    public String getRegistrationDate() {
-        return registrationDate;
-    }
-
-    public void setRegistrationDate(String registrationDate) {
-        this.registrationDate = registrationDate;
-    }
-
     public String getUrl() {
         return url;
     }
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    @Override
+    public String toString() {
+        return "Producer{" + "type=" + type + ", name=" + name + ", url=" + url + '}';
     }
     
     
