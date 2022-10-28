@@ -5,16 +5,26 @@ package model;
  * @author Alejandra
  */
 public abstract class Audio {
+    private int type;
     private String name;
     private String url;
     private int duration;
-    private int reproductions;
+    private double reproductions;
 
-    public Audio(String name, String url, int duration, int reproductions) {
+    public Audio(int type, String name, String url, int duration, double reproductions) {
+        this.type = type;
         this.name = name;
         this.url = url;
         this.duration = duration;
         this.reproductions = reproductions;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public String getName() {
@@ -41,7 +51,7 @@ public abstract class Audio {
         this.duration = duration;
     }
 
-    public int getReproductions() {
+    public double getReproductions() {
         return reproductions;
     }
 

@@ -6,10 +6,10 @@ package model;
  */
 public class Podcast extends Audio {
     private String description;
-    private Category category;
+    private String category;
 
-    public Podcast(String description, Category category, String name, String url, int duration, int reproductions) {
-        super(name, url, duration, reproductions);
+    public Podcast(String description, String category, int type, String name, String url, int duration, double reproductions) {
+        super(type, name, url, duration, reproductions);
         this.description = description;
         this.category = category;
     }
@@ -22,11 +22,11 @@ public class Podcast extends Audio {
         this.description = description;
     }
 
-    public Category getCategory() {
+    public String getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(String category) {
         this.category = category;
     }
 

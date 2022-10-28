@@ -154,14 +154,14 @@ public class Main {
     }
     
     public void registerProducer() {
-        boolean isOnRange = false;
+        boolean isOnRange = false, register;
         int optionType = 0;
         String pName, pUrl, pNickname, pId, pDate;
         
         System.out.println("Select a user type: \n" + 
         "1. Artist \n" +
         "2. Content creator");
-        optionType = scan.nextInt();
+        optionType = validateIntegerOption();
         
         isOnRange = controller.validateRange(optionType, 1, 2);
         
@@ -179,9 +179,36 @@ public class Main {
             System.out.println("Type the document id: ");
             pId = scan.next();
             
-            //calculate Date registration
+            pDate = controller.getDate();
             
-            // add register method of controller
+            switch(optionType) {
+                case 1:
+                    Producer artist = new Artist(pName, pUrl, optionType, pNickname, pId, pDate);
+                    
+                    register = controller.registerProducer(artist);
+                    
+                    if(register) {
+                        System.out.println(message.msgUserRegister());
+                    } else {
+                        System.out.println(message.msgErrorUserRegister());
+                    }
+                    
+                    break;
+                    
+                case 2:                  
+                    Producer contentCreator = new ContentCreator(pName, pUrl, optionType, pNickname, pId, pDate);
+
+                    register = controller.registerProducer(contentCreator);
+
+                    if(register) {
+                        System.out.println(message.msgUserRegister());
+                    } else {
+                        System.out.println(message.msgErrorUserRegister());
+                    }
+                    
+                    break;
+            }
+            
             
         } else {
             System.out.println(message.msgOutRange());
@@ -191,11 +218,164 @@ public class Main {
     }
     
     public void registerConsumer() {
+       boolean isOnRange = false, register;
+        int optionType = 0;
+        String cNickname, cId, cDate;
         
+        System.out.println("Select a user type: \n" + 
+        "1. Standard \n" +
+        "2. Premium");
+        optionType = validateIntegerOption();
+        
+        isOnRange = controller.validateRange(optionType, 1, 2);
+        
+        if(isOnRange) {
+            
+            System.out.println("Type the nickname: ");
+            cNickname = scan.next();
+            
+            System.out.println("Type the document id: ");
+            cId = scan.next();
+            
+            cDate = controller.getDate();
+            
+            switch(optionType) {
+                case 1:
+                    Consumer standard = new Standard(optionType, cNickname, cId, cDate);
+                    
+                    register = controller.registerConsumer(standard);
+                    
+                    if(register) {
+                        System.out.println(message.msgUserRegister());
+                    } else {
+                        System.out.println(message.msgErrorUserRegister());
+                    }
+                    
+                    break;
+                    
+                case 2:                  
+                    Consumer premium = new Premium(optionType, cNickname, cId, cDate);
+
+                    register = controller.registerConsumer(premium);
+
+                    if(register) {
+                        System.out.println(message.msgUserRegister());
+                    } else {
+                        System.out.println(message.msgErrorUserRegister());
+                    }
+                    
+                    break;
+            }
+            
+            
+        } else {
+            System.out.println(message.msgOutRange());
+        }
     }
     
     public void registerAudio() {
+        boolean isOnRange = false, register;
+        int optionType = 0, aDuration, optionGenre, optionCategory;
+        double aReproductions, aCost, aUnitsSold;
+        String aName, aUrl, aAlbum, aGenre, aDescription, aCategory;
         
+        System.out.println("Select an audio type: \n" + 
+        "1. Song \n" +
+        "2. Podcast ");
+        optionType = validateIntegerOption();
+        
+        isOnRange = controller.validateRange(optionType, 1, 2);
+        
+        if(isOnRange) {
+            
+            System.out.println("Type the name: ");
+            aName = scan.next();
+            
+            System.out.println("Type the url: ");
+            aUrl = scan.next();
+            
+            System.out.println("Type the duration (in minutes): ");
+            aDuration = scan.nextInt();
+            
+            System.out.println("Type the current total views or reproductions: ");
+            aReproductions = scan.nextDouble();
+            
+            switch(optionType) {
+                case 1:
+                    System.out.println("Type the name of the album to add this song: ");
+                    aAlbum = scan.next();
+                    
+                    System.out.println("Select a genre: \n" +
+                    "1. Rock \n" +
+                    "2. Pop \n" + 
+                    "3. Track \n" +
+                    "4. House \n");
+                    optionGenre = scan.nextInt();
+                    
+                    isOnRange = controller.validateRange(optionGenre, 1, 4);
+                    
+                    if (isOnRange) {
+                        
+                        aGenre = controller.setGenreToSong(optionGenre);
+                        
+                        System.out.println("Type the cost: ");
+                        aCost = scan.nextDouble();
+                        
+                        System.out.println("Type the units sold: ");
+                        aUnitsSold = scan.nextDouble();
+                        
+                        Audio song = new Song(aAlbum, aGenre, aCost, aUnitsSold, optionType, aName, aUrl, aDuration, aReproductions);
+
+                        register = controller.registerAudio(song);
+
+                        if(register) {
+                            System.out.println(message.msgAudioRegister());
+                        } else {
+                            System.out.println(message.msgAudioRegister());
+                        }   
+                        
+                    } else {
+                        System.out.println(message.msgOutRange());
+                    }
+                    
+                    break;
+                    
+                case 2:   
+                    System.out.println("Type the description: ");
+                    aDescription = scan.next();
+                    
+                    System.out.println("Select a category: \n" +
+                    "1. Politics \n" +
+                    "2. Entertainment \n" + 
+                    "3. Videogame \n" +
+                    "4. Fashion\n");
+                    optionCategory = scan.nextInt();
+
+                    isOnRange = controller.validateRange(optionCategory, 1, 4);
+                    
+                    if (isOnRange) {
+                        aCategory = controller.setCategoryToPodcast(optionCategory);
+                        
+                        Audio podcast = new Podcast(aDescription, aCategory, optionType, aName, aUrl, aDuration, aReproductions);
+
+                        register = controller.registerAudio(podcast);
+
+                        if(register) {
+                            System.out.println(message.msgAudioRegister());
+                        } else {
+                            System.out.println(message.msgErrorAudioRegister());
+                        }                        
+                    } else {
+                        System.out.println(message.msgOutRange());
+                    }
+                    
+                    break;
+            }
+            
+            
+        } else {
+            System.out.println(message.msgOutRange());
+        }
     }
     
     public void createPlaylist() {
@@ -260,7 +440,6 @@ public class Main {
         }
         else{
             scan.nextLine(); 
-            System.out.println("Error. You entered a non-numeric value.");
             option = -1; 
         }
 

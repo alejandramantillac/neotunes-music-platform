@@ -6,8 +6,8 @@ package model;
  */
 public abstract class Consumer extends User {
 
-    public Consumer(String nickname, String id, String registrationDate) {
-        super(nickname, id, registrationDate);
+    public Consumer(int type, String nickname, String id, String registrationDate) {
+        super(type, nickname, id, registrationDate);
     }
     
     

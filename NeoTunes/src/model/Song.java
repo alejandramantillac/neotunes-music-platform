@@ -6,12 +6,12 @@ package model;
  */
 public class Song extends Audio {
     private String album;
-    private Genre genre;
+    private String genre;
     private double cost;
     private double sales;
 
-    public Song(String album, Genre genre, double cost, double sales, String name, String url, int duration, int reproductions) {
-        super(name, url, duration, reproductions);
+    public Song(String album, String genre, double cost, double sales, int type, String name, String url, int duration, double reproductions) {
+        super(type, name, url, duration, reproductions);
         this.album = album;
         this.genre = genre;
         this.cost = cost;
@@ -26,11 +26,11 @@ public class Song extends Audio {
         this.album = album;
     }
 
-    public Genre getGenre() {
+    public String getGenre() {
         return genre;
     }
 
-    public void setGenre(Genre genre) {
+    public void setGenre(String genre) {
         this.genre = genre;
     }
 

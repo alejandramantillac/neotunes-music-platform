@@ -5,14 +5,23 @@ package model;
  * @author Alejandra
  */
 public abstract class User {
+    private int type;
     private String nickname;
     private String id;
     private String registrationDate;
 
-    public User(String nickname, String id, String registrationDate) {
+    public User(int type, String nickname, String id, String registrationDate) {
         this.nickname = nickname;
         this.id = id;
         this.registrationDate = registrationDate;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public String getNickname() {

@@ -6,8 +6,9 @@ package model;
  */
 public final class Standard extends Consumer {
 
-    public Standard(String nickname, String id, String registrationDate) {
-        super(nickname, id, registrationDate);
+    public Standard(int type, String nickname, String id, String registrationDate) {
+        super(type, nickname, id, registrationDate);
     }
+
     
 }
