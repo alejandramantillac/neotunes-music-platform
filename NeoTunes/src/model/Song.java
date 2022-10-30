@@ -43,7 +43,7 @@ public class Song extends Audio {
         return sales;
     }
 
-    public void setSales(int sales) {
+    public void setSales(double sales) {
         this.sales = sales;
     }
 

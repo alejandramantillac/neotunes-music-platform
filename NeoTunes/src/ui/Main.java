@@ -159,7 +159,7 @@ public class Main {
      */
     public void registerProducer() {
         boolean isOnRange = false, register;
-        int optionType = 0;
+        int optionType = 0, cPos, pPos;
         String pName, pUrl, pNickname, pId, pDate;
         
         System.out.println("Select a user type: \n" + 
@@ -179,40 +179,45 @@ public class Main {
             
             System.out.println("Type the nickname: ");
             pNickname = scan.next();
+            cPos = controller.checkUserNickname(pNickname, 1);
+            pPos = controller.checkUserNickname(pNickname, 2);
             
-            System.out.println("Type the document id: ");
-            pId = scan.next();
-            
-            pDate = controller.getDate();
-            
-            switch(optionType) {
-                case 1:
-                    Producer artist = new Artist(pName, pUrl, optionType, pNickname, pId, pDate);
-                    
-                    register = controller.registerProducer(artist);
-                    
-                    if(register) {
-                        System.out.println(message.msgUserRegister());
-                    } else {
-                        System.out.println(message.msgErrorUserRegister());
-                    }
-                    
-                    break;
-                    
-                case 2:                  
-                    Producer contentCreator = new ContentCreator(pName, pUrl, optionType, pNickname, pId, pDate);
+            if(cPos == -1 && pPos == -1) {
+                System.out.println("Type the document id: ");
+                pId = scan.next();
 
-                    register = controller.registerProducer(contentCreator);
+                pDate = controller.getDate();
 
-                    if(register) {
-                        System.out.println(message.msgUserRegister());
-                    } else {
-                        System.out.println(message.msgErrorUserRegister());
-                    }
-                    
-                    break;
+                switch(optionType) {
+                    case 1:
+                        Producer artist = new Artist(pName, pUrl, optionType, pNickname, pId, pDate);
+
+                        register = controller.registerProducer(artist);
+
+                        if(register) {
+                            System.out.println(message.msgUserRegister());
+                        } else {
+                            System.out.println(message.msgErrorUserRegister());
+                        }
+
+                        break;
+
+                    case 2:                  
+                        Producer contentCreator = new ContentCreator(pName, pUrl, optionType, pNickname, pId, pDate);
+
+                        register = controller.registerProducer(contentCreator);
+
+                        if(register) {
+                            System.out.println(message.msgUserRegister());
+                        } else {
+                            System.out.println(message.msgErrorUserRegister());
+                        }
+
+                        break;
+                }                
+            } else {
+                System.out.println(message.msgErrorNickname());
             }
-            
             
         } else {
             System.out.println(message.msgOutRange());
@@ -226,7 +231,7 @@ public class Main {
      */    
     public void registerConsumer() {
         boolean isOnRange = false, register;
-        int optionType = 0;
+        int optionType = 0, cTotalSongs = 0, cTotalPlaylist = 0, cPos, pPos;
         String cNickname, cId, cDate;
         
         System.out.println("Select a user type: \n" + 
@@ -237,44 +242,49 @@ public class Main {
         isOnRange = controller.validateRange(optionType, 1, 2);
         
         if(isOnRange) {
-            
             System.out.println("Type the nickname: ");
             cNickname = scan.next();
             
-            System.out.println("Type the document id: ");
-            cId = scan.next();
+            cPos = controller.checkUserNickname(cNickname, 1);
+            pPos = controller.checkUserNickname(cNickname, 2);
             
-            cDate = controller.getDate();
-            
-            switch(optionType) {
-                case 1:
-                    Consumer standard = new Standard(optionType, cNickname, cId, cDate);
-                    
-                    register = controller.registerConsumer(standard);
-                    
-                    if(register) {
-                        System.out.println(message.msgUserRegister());
-                    } else {
-                        System.out.println(message.msgErrorUserRegister());
-                    }
-                    
-                    break;
-                    
-                case 2:                  
-                    Consumer premium = new Premium(optionType, cNickname, cId, cDate);
+            if (cPos == -1 && pPos == -1) {
+                System.out.println("Type the document id: ");
+                cId = scan.next();
 
-                    register = controller.registerConsumer(premium);
+                cDate = controller.getDate();
 
-                    if(register) {
-                        System.out.println(message.msgUserRegister());
-                    } else {
-                        System.out.println(message.msgErrorUserRegister());
-                    }
-                    
-                    break;
+                switch(optionType) {
+                    case 1:
+                        Consumer standard = new Standard(cTotalSongs, cTotalPlaylist, optionType, cNickname, cId, cDate);
+
+                        register = controller.registerConsumer(standard);
+
+                        if(register) {
+                            System.out.println(message.msgUserRegister());
+                        } else {
+                            System.out.println(message.msgErrorUserRegister());
+                        }
+
+                        break;
+
+                    case 2:                  
+                        Consumer premium = new Premium(cTotalSongs, cTotalPlaylist, optionType, cNickname, cId, cDate);
+
+                        register = controller.registerConsumer(premium);
+
+                        if(register) {
+                            System.out.println(message.msgUserRegister());
+                        } else {
+                            System.out.println(message.msgErrorUserRegister());
+                        }
+
+                        break;
+                }               
+            } else {
+                System.out.println(message.msgErrorNickname());
             }
-            
-            
+    
         } else {
             System.out.println(message.msgOutRange());
         }
@@ -307,9 +317,7 @@ public class Main {
             System.out.println("Type the duration (in minutes): ");
             aDuration = scan.nextInt();
             
-            // delete reproductions
-            System.out.println("Type the current total views or reproductions: ");
-            aReproductions = scan.nextDouble();
+            aReproductions = 0;
             
             switch(optionType) {
                 case 1:
@@ -332,9 +340,7 @@ public class Main {
                         System.out.println("Type the cost: ");
                         aCost = scan.nextDouble();
                         
-                        //delete units = 0
-                        System.out.println("Type the units sold: ");
-                        aUnitsSold = scan.nextDouble();
+                        aUnitsSold = 0;
                         
                         Audio song = new Song(aAlbum, aGenre, aCost, aUnitsSold, optionType, aName, aUrl, aDuration, aReproductions);
 
@@ -394,44 +400,65 @@ public class Main {
      * createPlaylist
      */    
     public void createPlaylist() {
-        boolean isOnRange, register;
-        String pName, pCode, aName;
-        int optionPlaylist, optionAudio, maxRange;
+        boolean isOnRange, register, isNotFull = false;
+        String pName, pCode, aName, pOwner;
+        int optionPlaylist, optionAudio, maxRange, ownerPos, cType;
         Playlist playlist;
         
-        System.out.println("Type the name of the playlist: ");
-        pName = scan.next();
+        System.out.println("Type the nickname of the owner of the playlist: ");
+        pOwner = scan.next();
+        
+        ownerPos = controller.checkUserNickname(pOwner, 1);
+        
+        if (ownerPos != -1) {
+            
+            cType = controller.getConsumerType(ownerPos);
 
-        System.out.println("Select a playlist type: \n" +
-        "1. Only songs \n" +
-        "2. Only podcasts \n" +
-        "3. Podcast and songs");   
-        optionPlaylist = scan.nextInt();
+            if (cType == 1) {
+                isNotFull = controller.checkStandardConsumerTotalPlaylists(ownerPos);
+            }
+
+            if((cType == 1 && isNotFull) || cType == 2) {
+                System.out.println("Type the name of the playlist: ");
+                pName = scan.next();
+
+                System.out.println("Select a playlist type: \n" +
+                "1. Only songs \n" +
+                "2. Only podcasts \n" +
+                "3. Podcast and songs");   
+                optionPlaylist = scan.nextInt();
+
+                isOnRange = controller.validateRange(optionPlaylist, 1, 3);
+
+                if (isOnRange) {
+                    pCode = "0";
+
+                    switch(optionPlaylist) {
+                        case 1:
+                            playlist = new Playlist(TypePlaylist.SONGS, pOwner, pName, pCode);
+                            register = controller.createPlaylist(playlist);
+                            break;
+                        case 2:
+                            playlist = new Playlist(TypePlaylist.PODCASTS, pOwner, pName, pCode);
+                            register = controller.createPlaylist(playlist);
+                            break;
+                        case 3:
+                            playlist = new Playlist(TypePlaylist.BOTH, pOwner, pName, pCode);
+                            register = controller.createPlaylist(playlist);
+                            break;
+                    }  
+
+                    System.out.println(message.msgPlaylistRegister());
+
+                } else {
+                    System.out.println(message.msgOutRange());
+                }           
+            } else {
+                System.out.println(message.msgErrorFullPlaylist());
+            }
         
-        isOnRange = controller.validateRange(optionPlaylist, 1, 3);
-        
-        if (isOnRange) {
-            pCode = "0";
-            
-            switch(optionPlaylist) {
-                case 1:
-                    playlist = new Playlist(TypePlaylist.SONGS, pName, pCode);
-                    register = controller.createPlaylist(playlist);
-                    break;
-                case 2:
-                    playlist = new Playlist(TypePlaylist.PODCASTS, pName, pCode);
-                    register = controller.createPlaylist(playlist);
-                    break;
-                case 3:
-                    playlist = new Playlist(TypePlaylist.BOTH, pName, pCode);
-                    register = controller.createPlaylist(playlist);
-                    break;
-            }  
-            
-            System.out.println(message.msgPlaylistRegister());
-                
         } else {
-            System.out.println(message.msgOutRange());
+            System.out.println(message.msgErrorNameNotFound());
         }
 
     }
@@ -441,117 +468,130 @@ public class Main {
      */       
     public void editPlaylist() {
         boolean isOnRange, register, hasAccess;
-        String pName, pNewName, aName;
-        int pPos, optionEdition, optionAudio, maxRange, optionPlaylist;
+        String pName, pNewName, aName, pOwner;
+        int pPos, optionEdition, optionAudio, maxRange, optionPlaylist, ownerPos;
         
-        System.out.println("Type the playlist name: ");
-        pName = scan.next();
+        System.out.println("Type the nickname of the owner of the playlist: ");
+        pOwner = scan.next();
         
-        pPos = controller.searchPlaylistByName(pName);
-
-        if(pPos != -1) {
+        ownerPos = controller.checkUserNickname(pOwner, 1);
+        
+        if(ownerPos != -1) {
             
-            do {
-                System.out.println("What do you want to edit on the playlist? \n" +
-                "1. Edit playlist name \n" +
-                "2. Add a song to the playlist \n" +
-                "3. Add a podcast to the playlist \n" +
-                "4. Delete an audio of the playlist \n" +
-                "5. Back to main menu");
-                optionEdition = scan.nextInt();
+            System.out.println("These are the playlists of the user " + pOwner + ": \n" + controller.showPlaylistsConsumerUser(pOwner));            
+            
+            System.out.println("Type the playlist name that you want to edit: ");
+            pName = scan.next();
 
-                isOnRange = controller.validateRange(optionEdition, 1, 5);
+            pPos = controller.checkPlaylistOwner(pName, pOwner);
 
-                if (isOnRange) {
+            if(pPos != -1) {
 
-                    switch(optionEdition) {
-                        case 1:
-                            System.out.println("Type the new name of the playlist: ");
-                            pNewName = scan.next();
-                            controller.changePlaylistName(pName, pNewName);
-                            System.out.println(message.msgPlaylistEdition());
-                            break;
+                do {
+                    System.out.println("What do you want to edit on the playlist? \n" +
+                    "1. Edit playlist name \n" +
+                    "2. Add a song to the playlist \n" +
+                    "3. Add a podcast to the playlist \n" +
+                    "4. Delete an audio of the playlist \n" +
+                    "5. Back to main menu");
+                    optionEdition = scan.nextInt();
 
-                        case 2:
-                            hasAccess = controller.checkPlaylistType(pPos, optionEdition);
-                            
-                            if (hasAccess) {
-                                System.out.println("Select a song of the list: \n" + controller.listAllSongs());
+                    isOnRange = controller.validateRange(optionEdition, 1, 5);
+
+                    if (isOnRange) {
+
+                        switch(optionEdition) {
+                            case 1:
+                                System.out.println("Type the new name of the playlist: ");
+                                pNewName = scan.next();
+                                controller.changePlaylistName(pName, pNewName);
+                                System.out.println(message.msgPlaylistEdition());
+                                break;
+
+                            case 2:
+                                hasAccess = controller.checkPlaylistType(pPos, optionEdition);
+
+                                if (hasAccess) {
+                                    System.out.println("Select a song of the list: \n" + controller.listAllSongs());
+                                    optionAudio = scan.nextInt();
+                                    optionAudio = (optionAudio-1);
+                                    maxRange = controller.countAllSongs();
+                                    isOnRange = controller.validateRange(optionAudio, 0, maxRange);
+
+                                    if (isOnRange) {
+                                       aName = controller.getSongName(optionAudio);
+                                       register = controller.registerAudioOnPlaylist(aName);
+
+                                       if(register) {
+                                           System.out.println(message.msgAudioRegister());
+                                           System.out.println(message.msgPlaylistEdition());
+
+                                           // this is to DELETE
+                                           System.out.println(controller.listAllPlaylistAudios());
+                                       } else {
+                                           System.out.println(message.msgErrorAudioRegister());
+                                       }
+
+                                    } else {
+                                       System.out.println(message.msgOutRange());
+                                    }                               
+                                } else {
+                                    System.out.println(message.msgErrorDifferentPlaylistType());
+                                }
+
+
+                                break;
+
+                            case 3:
+                                System.out.println("Select a podcast of the list: \n" + controller.listAllPodcasts());
                                 optionAudio = scan.nextInt();
                                 optionAudio = (optionAudio-1);
+                                maxRange = controller.countAllPodcasts();
+                                isOnRange = controller.validateRange(optionAudio, 0, maxRange);
+
+                                if (isOnRange) {
+                                    aName = controller.getSongName(optionAudio);
+                                    register = controller.registerAudioOnPlaylist(aName);
+
+                                    if(register) {
+                                        System.out.println(message.msgAudioRegister());
+                                        System.out.println(message.msgPlaylistEdition());
+
+                                        // this is to DELETE
+                                        System.out.println(controller.listAllPlaylistAudios());
+                                    } else {
+                                        System.out.println(message.msgErrorAudioRegister());
+                                    }
+
+                                } else {
+                                    System.out.println(message.msgOutRange());
+                                }
+                                break;
+
+                            case 4:
+                                System.out.println("Select an audio of the list to delete: \n" + controller.listPlaylistAudios(pName));
+                                optionAudio = scan.nextInt()-1;
                                 maxRange = controller.countAllSongs();
                                 isOnRange = controller.validateRange(optionAudio, 0, maxRange);
 
                                 if (isOnRange) {
-                                   aName = controller.getSongName(optionAudio);
-                                   register = controller.registerAudioOnPlaylist(aName);
-
-                                   if(register) {
-                                       System.out.println(message.msgAudioRegister());
-                                       System.out.println(message.msgPlaylistEdition());
-
-                                       // this is to DELETE
-                                       System.out.println(controller.listAllPlaylistAudios());
-                                   } else {
-                                       System.out.println(message.msgErrorAudioRegister());
-                                   }
-
-                                } else {
-                                   System.out.println(message.msgOutRange());
-                                }                               
-                            } else {
-                                System.out.println(message.msgErrorDifferentPlaylistType());
-                            }
-                            
-                            break;
-
-                        case 3:
-                            System.out.println("Select a podcast of the list: \n" + controller.listAllPodcasts());
-                            optionAudio = scan.nextInt();
-                            optionAudio = (optionAudio-1);
-                            maxRange = controller.countAllPodcasts();
-                            isOnRange = controller.validateRange(optionAudio, 0, maxRange);
-                            
-                            if (isOnRange) {
-                                aName = controller.getSongName(optionAudio);
-                                register = controller.registerAudioOnPlaylist(aName);
-                                
-                                if(register) {
-                                    System.out.println(message.msgAudioRegister());
+                                    System.out.println(controller.deletePlaylistAudio(optionAudio));
                                     System.out.println(message.msgPlaylistEdition());
-                                    
-                                    // this is to DELETE
-                                    System.out.println(controller.listAllPlaylistAudios());
                                 } else {
-                                    System.out.println(message.msgErrorAudioRegister());
+                                    System.out.println(message.msgOutRange());
                                 }
-                                
-                            } else {
-                                System.out.println(message.msgOutRange());
-                            }
-                            break;
+                                break;
+                        }
 
-                        case 4:
-                            System.out.println("Select an audio of the list to delete: \n" + controller.listPlaylistAudios(pName));
-                            optionAudio = scan.nextInt()-1;
-                            maxRange = controller.countAllSongs();
-                            isOnRange = controller.validateRange(optionAudio, 0, maxRange);
-                            
-                            if (isOnRange) {
-                                System.out.println(controller.deletePlaylistAudio(optionAudio));
-                                System.out.println(message.msgPlaylistEdition());
-                            } else {
-                                System.out.println(message.msgOutRange());
-                            }
-                            break;
+                    } else {
+                        System.out.println(message.msgOutRange());
                     }
 
-                } else {
-                    System.out.println(message.msgOutRange());
-                }
-            
-            } while (optionEdition != 5);
-            
+                } while (optionEdition != 5);
+
+            } else {
+                System.out.println(message.msgErrorNameNotFound());
+            }
         } else {
             System.out.println(message.msgErrorNameNotFound());
         }
@@ -576,7 +616,55 @@ public class Main {
      * buySong
      */           
     public void buySong() {
+        boolean isOnRange, isNotFull;
+        String cNickname;
+        int cPos, optionSong, maxRange, cType;
+        Song song;
         
+        System.out.println("Type the nickname of the consumer user: ");
+        cNickname = scan.next();
+        
+        cPos = controller.checkUserNickname(cNickname, 1);    
+        
+        if (cPos != -1) {
+            System.out.println("Select a song of the list: \n" + controller.listAllSongs());
+            optionSong = scan.nextInt()-1;
+            maxRange = controller.countAllSongs();
+            isOnRange = controller.validateRange(optionSong, 0, maxRange);
+            
+            if (isOnRange) {
+                System.out.println("The cost of this song is: " + controller.getSongCost(optionSong) + " dollars.");
+                song = controller.getSong(optionSong);
+                controller.setSongPurchase(optionSong, song);
+                
+                cType = controller.getConsumerType(cPos);
+                
+                switch(cType) {
+                    case 1:
+                        // standard user
+                        isNotFull = controller.checkStandardConsumerTotalSongs(cPos);
+                        
+                        if(isNotFull) {
+                            controller.updateConsumerPurchasedSongs(cPos);
+                        } else {
+                            System.out.println(message.msgErrorPurchaseSong());
+                        }
+                        break;
+                        
+                    case 2:
+                        // premium user
+                        controller.updateConsumerPurchasedSongs(cPos);
+                        break;
+                }
+                
+                System.out.println(message.msgSuccesfullPurchase());    
+            } else {
+                System.out.println(message.msgOutRange());
+            }
+            
+        } else {
+            System.out.println(message.msgErrorNameNotFound());
+        }
     }
     
     /**

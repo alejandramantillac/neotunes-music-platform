@@ -3,14 +3,16 @@ package model;
 import java.util.ArrayList;
 
 public class Playlist {
+    private String ownerNickname;
     private TypePlaylist type;
     private String name;
     private ArrayList<String> listAudios = new ArrayList<String>();
     private String numericCode;
 
-    public Playlist(TypePlaylist type, String name, String numericCode) {
+    public Playlist(TypePlaylist type, String ownerNickname, String name, String numericCode) {
         // type 1 = songs, type 2 = podcast, type 3 = both
-        this.type = type;        
+        this.type = type;       
+        this.ownerNickname = ownerNickname;
         this.name = name;
         this.listAudios = listAudios;
         this.numericCode = numericCode;
@@ -22,6 +24,14 @@ public class Playlist {
 
     public void setType(TypePlaylist type) {
         this.type = type;
+    }
+
+    public String getOwnerNickname() {
+        return ownerNickname;
+    }
+
+    public void setOwnerNickname(String ownerNickname) {
+        this.ownerNickname = ownerNickname;
     }
     
     public String getName() {

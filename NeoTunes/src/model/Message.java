@@ -49,5 +49,20 @@ public class Message {
     public String msgErrorDifferentPlaylistType() {
         return "Error. This playlist only can add other type of audio.";
     }
+    
+    public String msgSuccesfullPurchase() {
+        return "Purchase successfully completed.";
+    }
+    
+    public String msgErrorPurchaseSong() {
+        return "Error. Your account only allows you to purchase up to 100 songs.";
+    }
+    
+    public String msgErrorFullPlaylist() {
+        return "Error. Your account only allows you to create up to 20 playlists.";
+    }
 
+    public String msgErrorNickname() {
+        return "Error. The nickname entered already exists.";
+    }
 }
