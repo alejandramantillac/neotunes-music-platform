@@ -1,9 +1,6 @@
 package model;
 
-/**
- *
- * @author Alejandra
- */
+
 public abstract class User {
     private int type;
     private String nickname;

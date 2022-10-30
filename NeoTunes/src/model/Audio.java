@@ -1,9 +1,5 @@
 package model;
 
-/**
- *
- * @author Alejandra
- */
 public abstract class Audio {
     private int type;
     private String name;

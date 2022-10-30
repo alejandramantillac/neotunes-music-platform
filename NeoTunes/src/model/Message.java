@@ -1,9 +1,5 @@
 package model;
 
-/**
- *
- * @author Alejandra
- */
 public class Message {
 
     public Message() {
@@ -28,6 +24,30 @@ public class Message {
     
     public String msgErrorAudioRegister() {
         return "The audio could not be registered.";
+    }
+    
+    public String msgPlaylistRegister() {
+        return "The playlist was successfully registered.";
+    }
+    
+    public String msgErrorPlaylistRegister() {
+        return "The playlist could not be registered.";
+    }
+    
+    public String msgPlaylistEdition() {
+        return "The playlist was successfully updated.";
+    }
+    
+    public String msgErrorPlaylistEdition() {
+        return "The playlist could not be updated.";
+    }
+    
+    public String msgErrorNameNotFound() {
+        return "Error. Name not found.";
+    }
+    
+    public String msgErrorDifferentPlaylistType() {
+        return "Error. This playlist only can add other type of audio.";
     }
 
 }

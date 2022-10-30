@@ -1,9 +1,6 @@
 package model;
 
-/**
- *
- * @author Alejandra
- */
+
 public class Podcast extends Audio {
     private String description;
     private String category;

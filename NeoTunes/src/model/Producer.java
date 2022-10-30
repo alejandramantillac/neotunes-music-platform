@@ -1,9 +1,6 @@
 package model;
 
-/**
- *
- * @author Alejandra
- */
+
 public abstract class Producer extends User{
     private String name;
     private String url;

@@ -3,6 +3,7 @@ package ui;
 import model.*;
 import java.util.Scanner;
 import java.util.InputMismatchException;
+
 /**
  *
  * @author Alejandra
@@ -153,6 +154,9 @@ public class Main {
             }
     }
     
+    /**
+     * registerProducer
+     */
     public void registerProducer() {
         boolean isOnRange = false, register;
         int optionType = 0;
@@ -216,9 +220,12 @@ public class Main {
         
         
     }
-    
+
+    /**
+     * registerConsumer
+     */    
     public void registerConsumer() {
-       boolean isOnRange = false, register;
+        boolean isOnRange = false, register;
         int optionType = 0;
         String cNickname, cId, cDate;
         
@@ -272,7 +279,10 @@ public class Main {
             System.out.println(message.msgOutRange());
         }
     }
-    
+
+    /**
+     * registerAudio
+     */
     public void registerAudio() {
         boolean isOnRange = false, register;
         int optionType = 0, aDuration, optionGenre, optionCategory;
@@ -297,6 +307,7 @@ public class Main {
             System.out.println("Type the duration (in minutes): ");
             aDuration = scan.nextInt();
             
+            // delete reproductions
             System.out.println("Type the current total views or reproductions: ");
             aReproductions = scan.nextDouble();
             
@@ -321,6 +332,7 @@ public class Main {
                         System.out.println("Type the cost: ");
                         aCost = scan.nextDouble();
                         
+                        //delete units = 0
                         System.out.println("Type the units sold: ");
                         aUnitsSold = scan.nextDouble();
                         
@@ -331,7 +343,7 @@ public class Main {
                         if(register) {
                             System.out.println(message.msgAudioRegister());
                         } else {
-                            System.out.println(message.msgAudioRegister());
+                            System.out.println(message.msgErrorAudioRegister());
                         }   
                         
                     } else {
@@ -377,56 +389,244 @@ public class Main {
             System.out.println(message.msgOutRange());
         }
     }
-    
+
+    /**
+     * createPlaylist
+     */    
     public void createPlaylist() {
+        boolean isOnRange, register;
+        String pName, pCode, aName;
+        int optionPlaylist, optionAudio, maxRange;
+        Playlist playlist;
         
+        System.out.println("Type the name of the playlist: ");
+        pName = scan.next();
+
+        System.out.println("Select a playlist type: \n" +
+        "1. Only songs \n" +
+        "2. Only podcasts \n" +
+        "3. Podcast and songs");   
+        optionPlaylist = scan.nextInt();
+        
+        isOnRange = controller.validateRange(optionPlaylist, 1, 3);
+        
+        if (isOnRange) {
+            pCode = "0";
+            
+            switch(optionPlaylist) {
+                case 1:
+                    playlist = new Playlist(TypePlaylist.SONGS, pName, pCode);
+                    register = controller.createPlaylist(playlist);
+                    break;
+                case 2:
+                    playlist = new Playlist(TypePlaylist.PODCASTS, pName, pCode);
+                    register = controller.createPlaylist(playlist);
+                    break;
+                case 3:
+                    playlist = new Playlist(TypePlaylist.BOTH, pName, pCode);
+                    register = controller.createPlaylist(playlist);
+                    break;
+            }  
+            
+            System.out.println(message.msgPlaylistRegister());
+                
+        } else {
+            System.out.println(message.msgOutRange());
+        }
+
     }
     
+    /**
+     * editPlaylist
+     */       
     public void editPlaylist() {
+        boolean isOnRange, register, hasAccess;
+        String pName, pNewName, aName;
+        int pPos, optionEdition, optionAudio, maxRange, optionPlaylist;
+        
+        System.out.println("Type the playlist name: ");
+        pName = scan.next();
+        
+        pPos = controller.searchPlaylistByName(pName);
+
+        if(pPos != -1) {
+            
+            do {
+                System.out.println("What do you want to edit on the playlist? \n" +
+                "1. Edit playlist name \n" +
+                "2. Add a song to the playlist \n" +
+                "3. Add a podcast to the playlist \n" +
+                "4. Delete an audio of the playlist \n" +
+                "5. Back to main menu");
+                optionEdition = scan.nextInt();
+
+                isOnRange = controller.validateRange(optionEdition, 1, 5);
+
+                if (isOnRange) {
+
+                    switch(optionEdition) {
+                        case 1:
+                            System.out.println("Type the new name of the playlist: ");
+                            pNewName = scan.next();
+                            controller.changePlaylistName(pName, pNewName);
+                            System.out.println(message.msgPlaylistEdition());
+                            break;
+
+                        case 2:
+                            hasAccess = controller.checkPlaylistType(pPos, optionEdition);
+                            
+                            if (hasAccess) {
+                                System.out.println("Select a song of the list: \n" + controller.listAllSongs());
+                                optionAudio = scan.nextInt();
+                                optionAudio = (optionAudio-1);
+                                maxRange = controller.countAllSongs();
+                                isOnRange = controller.validateRange(optionAudio, 0, maxRange);
+
+                                if (isOnRange) {
+                                   aName = controller.getSongName(optionAudio);
+                                   register = controller.registerAudioOnPlaylist(aName);
+
+                                   if(register) {
+                                       System.out.println(message.msgAudioRegister());
+                                       System.out.println(message.msgPlaylistEdition());
+
+                                       // this is to DELETE
+                                       System.out.println(controller.listAllPlaylistAudios());
+                                   } else {
+                                       System.out.println(message.msgErrorAudioRegister());
+                                   }
+
+                                } else {
+                                   System.out.println(message.msgOutRange());
+                                }                               
+                            } else {
+                                System.out.println(message.msgErrorDifferentPlaylistType());
+                            }
+                            
+                            break;
+
+                        case 3:
+                            System.out.println("Select a podcast of the list: \n" + controller.listAllPodcasts());
+                            optionAudio = scan.nextInt();
+                            optionAudio = (optionAudio-1);
+                            maxRange = controller.countAllPodcasts();
+                            isOnRange = controller.validateRange(optionAudio, 0, maxRange);
+                            
+                            if (isOnRange) {
+                                aName = controller.getSongName(optionAudio);
+                                register = controller.registerAudioOnPlaylist(aName);
+                                
+                                if(register) {
+                                    System.out.println(message.msgAudioRegister());
+                                    System.out.println(message.msgPlaylistEdition());
+                                    
+                                    // this is to DELETE
+                                    System.out.println(controller.listAllPlaylistAudios());
+                                } else {
+                                    System.out.println(message.msgErrorAudioRegister());
+                                }
+                                
+                            } else {
+                                System.out.println(message.msgOutRange());
+                            }
+                            break;
+
+                        case 4:
+                            System.out.println("Select an audio of the list to delete: \n" + controller.listPlaylistAudios(pName));
+                            optionAudio = scan.nextInt()-1;
+                            maxRange = controller.countAllSongs();
+                            isOnRange = controller.validateRange(optionAudio, 0, maxRange);
+                            
+                            if (isOnRange) {
+                                System.out.println(controller.deletePlaylistAudio(optionAudio));
+                                System.out.println(message.msgPlaylistEdition());
+                            } else {
+                                System.out.println(message.msgOutRange());
+                            }
+                            break;
+                    }
+
+                } else {
+                    System.out.println(message.msgOutRange());
+                }
+            
+            } while (optionEdition != 5);
+            
+        } else {
+            System.out.println(message.msgErrorNameNotFound());
+        }
         
     }
-    
+
+    /**
+     * sharePlaylist
+     */           
     public void sharePlaylist() {
         
     }
     
+    /**
+     * playAudio
+     */           
     public void playAudio() {
         
     }
     
+    /**
+     * buySong
+     */           
     public void buySong() {
         
     }
     
+    /**
+     * getTotalAccumulatedPlays
+     */          
     public void getTotalAccumulatedPlays() {
         
     }
     
+    /**
+     * getMostListenedSongGenre
+     */           
     public void getMostListenedSongGenre() {
         
     }
     
+    /**
+     * getMostListenedPodcastCategory
+     */           
     public void getMostListenedPodcastCategory() {
         
     }
     
+    /**
+     * getInfoTopFiveProducers
+     */          
     public void getInfoTopFiveProducers() {
         
     }
     
+    /**
+     * getInfoTopTenAudio
+     */           
     public void getInfoTopTenAudio() {
         
     }
-    
+
+    /**
+     * getSongSalesInfoByGenre
+     */           
     public void getSongSalesInfoByGenre() {
         
     }
-    
+
+    /**
+     * getSalesInfoOfBestSellingSong
+     */           
     public void  getSalesInfoOfBestSellingSong() {
         
     }
-    
-    
     
     /**
      * validateIntegerOption validates integer entries entered by the user.

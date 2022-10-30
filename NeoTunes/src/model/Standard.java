@@ -1,9 +1,6 @@
 package model;
 
-/**
- *
- * @author Alejandra
- */
+
 public final class Standard extends Consumer {
 
     public Standard(int type, String nickname, String id, String registrationDate) {

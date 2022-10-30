@@ -1,9 +1,6 @@
 package model;
 
-/**
- *
- * @author Alejandra
- */
+
 public class Song extends Audio {
     private String album;
     private String genre;
