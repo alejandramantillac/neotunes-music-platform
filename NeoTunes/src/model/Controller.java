@@ -166,8 +166,28 @@ public class Controller {
      * @return cType represents the type of consumer.
      */
     public int getConsumerType(int cPos) {
-        
+             
         int cType = consumers.get(cPos).getType();
+        
+        return cType;
+    }
+    
+    /**
+     * getProducerType gets the type of consumer user (standard or premium).
+     * @param cPos represents the consumer position.
+     * @return cType represents the type of consumer.
+     */
+    public int getProducerType(int cPos) {
+             
+        int cType = producers.get(cPos).getType();
+        System.out.println("ctype is" + cType);
+        
+        return cType;
+    }
+    
+    public String checkuser(int cPos) {
+             
+        String cType = consumers.get(cPos).toString();
         
         return cType;
     }
@@ -224,6 +244,14 @@ public class Controller {
         int currentPlaylists = consumers.get(cPos).getTotalPlaylists();
         
         consumers.get(cPos).setTotalSongs(currentPlaylists+1);               
+    }
+    
+    public void setConsumerType(int cPos, int cType) {     
+        if (cType == 1) {
+            consumers.get(cPos).setType(1);                          
+        } else {
+            consumers.get(cPos).setType(2);               
+        }
     }
 
     /**
@@ -383,9 +411,7 @@ public class Controller {
                 songName = ((Song)(audios.get(optionAudio))).getName();
             }
         }     
-        
-        System.out.println("songname is "+ songName);
-        
+                
         return songName;
     }
 

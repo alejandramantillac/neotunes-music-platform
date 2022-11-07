@@ -231,7 +231,7 @@ public class Main {
      */    
     public void registerConsumer() {
         boolean isOnRange = false, register;
-        int optionType = 0, cTotalSongs = 0, cTotalPlaylist = 0, cPos, pPos;
+        int optionType = 0, cTotalSongs = 0, cTotalPlaylist = 0, cPos, pPos, sPos;
         String cNickname, cId, cDate;
         
         System.out.println("Select a user type: \n" + 
@@ -256,12 +256,14 @@ public class Main {
 
                 switch(optionType) {
                     case 1:
-                        Consumer standard = new Standard(cTotalSongs, cTotalPlaylist, optionType, cNickname, cId, cDate);
+                        Consumer standard = new Standard(cTotalSongs, cTotalPlaylist, 1, cNickname, cId, cDate);
 
                         register = controller.registerConsumer(standard);
 
                         if(register) {
+                            sPos = controller.checkUserNickname(cNickname, 1);
                             System.out.println(message.msgUserRegister());
+                            controller.setConsumerType(sPos, 1);
                         } else {
                             System.out.println(message.msgErrorUserRegister());
                         }
@@ -269,12 +271,14 @@ public class Main {
                         break;
 
                     case 2:                  
-                        Consumer premium = new Premium(cTotalSongs, cTotalPlaylist, optionType, cNickname, cId, cDate);
+                        Consumer premium = new Premium(cTotalSongs, cTotalPlaylist, 2, cNickname, cId, cDate);
 
                         register = controller.registerConsumer(premium);
 
                         if(register) {
+                            sPos = controller.checkUserNickname(cNickname, 1);
                             System.out.println(message.msgUserRegister());
+                            controller.setConsumerType(sPos, 2);
                         } else {
                             System.out.println(message.msgErrorUserRegister());
                         }
@@ -295,9 +299,9 @@ public class Main {
      */
     public void registerAudio() {
         boolean isOnRange = false, register;
-        int optionType = 0, aDuration, optionGenre, optionCategory;
+        int optionType = 0, aDuration, optionGenre, optionCategory, nickPos, uType;
         double aReproductions, aCost, aUnitsSold;
-        String aName, aUrl, aAlbum, aGenre, aDescription, aCategory;
+        String aName, aUrl, aAlbum, aGenre, aDescription, aCategory, aNickname;
         
         System.out.println("Select an audio type: \n" + 
         "1. Song \n" +
@@ -321,6 +325,9 @@ public class Main {
             
             switch(optionType) {
                 case 1:
+                    System.out.println("Type the nickname of the artist user (owner): ");
+                    aNickname = scan.next();
+                    
                     System.out.println("Type the name of the album to add this song: ");
                     aAlbum = scan.next();
                     
@@ -341,7 +348,7 @@ public class Main {
                         aCost = scan.nextDouble();
                         
                         aUnitsSold = 0;
-                        
+
                         Audio song = new Song(aAlbum, aGenre, aCost, aUnitsSold, optionType, aName, aUrl, aDuration, aReproductions);
 
                         register = controller.registerAudio(song);
@@ -413,6 +420,7 @@ public class Main {
         if (ownerPos != -1) {
             
             cType = controller.getConsumerType(ownerPos);
+            System.out.println("ctype is "+ cType);
 
             if (cType == 1) {
                 isNotFull = controller.checkStandardConsumerTotalPlaylists(ownerPos);
@@ -609,8 +617,75 @@ public class Main {
      * playAudio
      */           
     public void playAudio() {
+        boolean isOnRange;
+        String uNickname;
+        int userPos, cType, optionSong, maxRange, count = 0;
         
+        System.out.println("Type the nickname of the user: ");
+        uNickname = scan.next();
+        
+        userPos = controller.checkUserNickname(uNickname, 1);
+        
+        if (userPos != -1) {
+            System.out.println(controller.checkuser(userPos));
+
+            cType = controller.getConsumerType(userPos);
+            
+            switch(cType) {
+                case 1:
+                    // both cases are a simulation, isn't the final version
+                    // standard
+                    do {
+                        System.out.println("Select a song of the list: \n" + controller.listAllSongs() + "\nor if you want to back to main menu type -1");
+                        optionSong = scan.nextInt()-1;
+                        maxRange = controller.countAllSongs();
+                        isOnRange = controller.validateRange(optionSong, -1, maxRange);      
+                        
+                        if (isOnRange) {
+                            
+                            if (count%2 == 0) {
+                                
+                                
+                                //ads simulation
+                                System.out.println("this is and ad");
+                                // play song
+                                System.out.println("playing song" + controller.getSongName(optionSong));
+                            } else {
+                                // play song
+                                System.out.println("playing song" + controller.getSongName(optionSong));
+                            }
+                            
+                            count++;
+                        } else {
+                            System.out.println(message.msgOutRange());
+                        }
+                        
+                    } while (optionSong != -1);                   
+                    
+                    break;
+                    
+                case 2:
+                    // premium
+                    System.out.println("Select a song of the list: \n" + controller.listAllSongs());
+                    optionSong = scan.nextInt()-1;
+                    maxRange = controller.countAllSongs();
+                    isOnRange = controller.validateRange(optionSong, 0, maxRange);
+                    
+                    if (isOnRange) {
+                        System.out.println("playing song" + controller.getSongName(optionSong));
+                    } else {
+                        System.out.println(message.msgOutRange());
+                    }
+                    
+                    break;
+            }
+            
+            
+        } else {
+            System.out.println(message.msgErrorNameNotFound());
+        }
     }
+    
     
     /**
      * buySong

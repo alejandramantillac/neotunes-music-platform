@@ -28,4 +28,9 @@ public abstract class Consumer extends User {
         this.totalPlaylists = totalPlaylists;
     }
     
+    @Override
+    public String toString() {
+        return "nickname=" + super.getNickname() + ",type = " + super.getType();
+    }
+    
 }
