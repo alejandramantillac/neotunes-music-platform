@@ -301,7 +301,7 @@ public class Main {
         boolean isOnRange = false, register;
         int optionType = 0, aDuration, optionGenre, optionCategory, nickPos, uType;
         double aReproductions, aCost, aUnitsSold;
-        String aName, aUrl, aAlbum, aGenre, aDescription, aCategory, aNickname;
+        String aName, aUrl, aAlbum, aGenre, aDescription, aCategory, aNickname = "";
         
         System.out.println("Select an audio type: \n" + 
         "1. Song \n" +
@@ -327,71 +327,88 @@ public class Main {
                 case 1:
                     System.out.println("Type the nickname of the artist user (owner): ");
                     aNickname = scan.next();
-                    
-                    System.out.println("Type the name of the album to add this song: ");
-                    aAlbum = scan.next();
-                    
-                    System.out.println("Select a genre: \n" +
-                    "1. Rock \n" +
-                    "2. Pop \n" + 
-                    "3. Track \n" +
-                    "4. House \n");
-                    optionGenre = scan.nextInt();
-                    
-                    isOnRange = controller.validateRange(optionGenre, 1, 4);
-                    
-                    if (isOnRange) {
-                        
-                        aGenre = controller.setGenreToSong(optionGenre);
-                        
-                        System.out.println("Type the cost: ");
-                        aCost = scan.nextDouble();
-                        
-                        aUnitsSold = 0;
 
-                        Audio song = new Song(aAlbum, aGenre, aCost, aUnitsSold, optionType, aName, aUrl, aDuration, aReproductions);
+                    nickPos = controller.checkUserNickname(aNickname, 2);
 
-                        register = controller.registerAudio(song);
+                    if (nickPos == -1) {
+                        System.out.println(message.msgErrorNameNotFound());
 
-                        if(register) {
-                            System.out.println(message.msgAudioRegister());
-                        } else {
-                            System.out.println(message.msgErrorAudioRegister());
-                        }   
-                        
                     } else {
-                        System.out.println(message.msgOutRange());
+                        System.out.println("Type the name of the album to add this song: ");
+                        aAlbum = scan.next();
+                        
+                        System.out.println("Select a genre: \n" +
+                        "1. Rock \n" +
+                        "2. Pop \n" + 
+                        "3. Track \n" +
+                        "4. House \n");
+                        optionGenre = scan.nextInt();
+                        
+                        isOnRange = controller.validateRange(optionGenre, 1, 4);
+                        
+                        if (isOnRange) {
+                            
+                            aGenre = controller.setGenreToSong(optionGenre);
+                            
+                            System.out.println("Type the cost: ");
+                            aCost = scan.nextDouble();
+                            
+                            aUnitsSold = 0;
+
+                            Audio song = new Song(aAlbum, aGenre, aCost, aUnitsSold, aNickname, optionType, aName, aUrl, aDuration, aReproductions);
+
+                            register = controller.registerAudio(song);
+
+                            if(register) {
+                                System.out.println(message.msgAudioRegister());
+                            } else {
+                                System.out.println(message.msgErrorAudioRegister());
+                            }   
+                            
+                        } else {
+                            System.out.println(message.msgOutRange());
+                        }
                     }
                     
                     break;
                     
                 case 2:   
-                    System.out.println("Type the description: ");
-                    aDescription = scan.next();
-                    
-                    System.out.println("Select a category: \n" +
-                    "1. Politics \n" +
-                    "2. Entertainment \n" + 
-                    "3. Videogame \n" +
-                    "4. Fashion\n");
-                    optionCategory = scan.nextInt();
+                    System.out.println("Type the nickname of the content creator user (owner): ");
+                    aNickname = scan.next();
 
-                    isOnRange = controller.validateRange(optionCategory, 1, 4);
-                    
-                    if (isOnRange) {
-                        aCategory = controller.setCategoryToPodcast(optionCategory);
-                        
-                        Audio podcast = new Podcast(aDescription, aCategory, optionType, aName, aUrl, aDuration, aReproductions);
+                    nickPos = controller.checkUserNickname(aNickname, 2);
 
-                        register = controller.registerAudio(podcast);
+                    if (nickPos == -1) {
+                        System.out.println(message.msgErrorNameNotFound());
 
-                        if(register) {
-                            System.out.println(message.msgAudioRegister());
-                        } else {
-                            System.out.println(message.msgErrorAudioRegister());
-                        }                        
                     } else {
-                        System.out.println(message.msgOutRange());
+                        System.out.println("Type the description: ");
+                        aDescription = scan.next();
+                        
+                        System.out.println("Select a category: \n" +
+                        "1. Politics \n" +
+                        "2. Entertainment \n" + 
+                        "3. Videogame \n" +
+                        "4. Fashion\n");
+                        optionCategory = scan.nextInt();
+
+                        isOnRange = controller.validateRange(optionCategory, 1, 4);
+                        
+                        if (isOnRange) {
+                            aCategory = controller.setCategoryToPodcast(optionCategory);
+                            
+                            Audio podcast = new Podcast(aDescription, aCategory, aNickname, optionType, aName, aUrl, aDuration, aReproductions);
+
+                            register = controller.registerAudio(podcast);
+
+                            if(register) {
+                                System.out.println(message.msgAudioRegister());
+                            } else {
+                                System.out.println(message.msgErrorAudioRegister());
+                            }                        
+                        } else {
+                            System.out.println(message.msgOutRange());
+                        }
                     }
                     
                     break;
@@ -618,8 +635,8 @@ public class Main {
      */           
     public void playAudio() {
         boolean isOnRange;
-        String uNickname;
-        int userPos, cType, optionSong, maxRange, count = 0;
+        String uNickname, showAd;
+        int userPos, cType, optionSong, maxRange, count = 0, randomAd, optionAudio;
         
         System.out.println("Type the nickname of the user: ");
         uNickname = scan.next();
@@ -630,57 +647,113 @@ public class Main {
             System.out.println(controller.checkuser(userPos));
 
             cType = controller.getConsumerType(userPos);
-            
-            switch(cType) {
-                case 1:
-                    // both cases are a simulation, isn't the final version
-                    // standard
-                    do {
-                        System.out.println("Select a song of the list: \n" + controller.listAllSongs() + "\nor if you want to back to main menu type -1");
-                        optionSong = scan.nextInt()-1;
-                        maxRange = controller.countAllSongs();
-                        isOnRange = controller.validateRange(optionSong, -1, maxRange);      
-                        
-                        if (isOnRange) {
+
+            System.out.println("Choose the audio option you want to listen: \n" + "1. Song \n" + "2. Podcast");
+            optionAudio = scan.nextInt();
+
+            isOnRange = controller.validateRange(optionAudio, 1, 2);
+
+            // song
+            if (isOnRange && optionAudio == 1) {
+                switch(cType) {
+                    case 1:
+                        // standard
+                        do {
+                            System.out.println("Select a song of the list: \n" + controller.listAllSongs() + "\nor if you want to back to main menu type 0");
+                            optionSong = scan.nextInt()-1;
+                            maxRange = controller.countAllSongs();
+                            isOnRange = controller.validateRange(optionSong, -1, maxRange);      
                             
-                            if (count%2 == 0) {
+                            if (isOnRange) {
                                 
+                                if (count != 1 && count%3 == 0) {
+                                    randomAd = controller.generateRandomNumber(3,1);
+
+                                    showAd = controller.showAds(randomAd);
+                                    
+                                    System.out.println("Ad: " + showAd);
+                                    System.out.println("Playing song: " + controller.getSongName(optionSong));
+                                } else {
+                                    System.out.println("Playing song: " + controller.getSongName(optionSong));
+                                }
                                 
-                                //ads simulation
-                                System.out.println("this is and ad");
-                                // play song
-                                System.out.println("playing song" + controller.getSongName(optionSong));
+                                ++count;
                             } else {
-                                // play song
-                                System.out.println("playing song" + controller.getSongName(optionSong));
+                                System.out.println(message.msgOutRange());
                             }
                             
-                            count++;
+                        } while (optionSong != -1);   
+                        break;
+                        
+                    case 2:
+                        // premium
+                        System.out.println("Select a song of the list: \n" + controller.listAllSongs());
+                        optionSong = scan.nextInt()-1;
+                        maxRange = controller.countAllSongs();
+                        isOnRange = controller.validateRange(optionSong, -1, maxRange);
+                        
+                        if (isOnRange) {
+                            System.out.println("Playing song: " + controller.getSongName(optionSong));
                         } else {
                             System.out.println(message.msgOutRange());
                         }
                         
-                    } while (optionSong != -1);                   
-                    
-                    break;
-                    
-                case 2:
-                    // premium
-                    System.out.println("Select a song of the list: \n" + controller.listAllSongs());
-                    optionSong = scan.nextInt()-1;
-                    maxRange = controller.countAllSongs();
-                    isOnRange = controller.validateRange(optionSong, 0, maxRange);
-                    
-                    if (isOnRange) {
-                        System.out.println("playing song" + controller.getSongName(optionSong));
-                    } else {
-                        System.out.println(message.msgOutRange());
-                    }
-                    
-                    break;
+                        break;
+                }
+            } else {
+                System.out.println(message.msgOutRange());
             }
-            
-            
+
+            // podcast
+            if (isOnRange && optionAudio == 2) {
+                switch(cType) {
+                    case 1:
+                        // standard
+                        do {
+                            count = 2;
+                            System.out.println("Select a podcast of the list: \n" + controller.listAllPodcasts() + "\nor if you want to back to main menu type 0");
+                            optionSong = scan.nextInt()-1;
+                            maxRange = controller.countAllPodcasts();
+                            isOnRange = controller.validateRange(optionSong, -1, maxRange);      
+                            
+                            if (isOnRange) {
+
+                                if (count%2 == 0) {
+                                    randomAd = controller.generateRandomNumber(3,1);
+
+                                    showAd = controller.showAds(randomAd);
+                                    
+                                    System.out.println("Ad: " + showAd);
+                                    System.out.println("Playing podcast: " + controller.getPodcastName(optionSong));
+                                } else {
+                                    System.out.println("Playing podcast: " + controller.getPodcastName(optionSong));
+                                }
+                                count++;
+                                
+                            } else {
+                                System.out.println(message.msgOutRange());
+                            }
+                            
+                        } while (optionSong != -1);   
+                        
+                        break;
+
+                    case 2:
+                        // premium
+                            System.out.println("Select a podcast of the list: \n" + controller.listAllPodcasts());
+                            optionSong = scan.nextInt()-1;
+                            maxRange = controller.countAllPodcasts();
+                            isOnRange = controller.validateRange(optionSong, -1, maxRange);
+                            
+                            if (isOnRange) {
+                                System.out.println("Playing podcast: " + controller.getPodcastName(optionSong));
+                            } else {
+                                System.out.println(message.msgOutRange());
+                            }
+                        break;
+                }
+            }
+
         } else {
             System.out.println(message.msgErrorNameNotFound());
         }

@@ -372,7 +372,7 @@ public class Controller {
      */    
     public Song getSong(int optionSong) {
 
-        Song song = new Song("", "", 0.0, 0.0, 0, "", "", 0, 0.0);
+        Song song = new Song("", "", 0.0, 0.0, "", 0, "", "", 0, 0.0);
         
         if(audios.get(optionSong) instanceof Song){
             song = ((Song)(audios.get(optionSong)));
@@ -413,6 +413,23 @@ public class Controller {
         }     
                 
         return songName;
+    }
+
+    /**
+     * getPodcastName get the name of a specific podcast with the position.
+     * @param optionAudio represents the audio's position.
+     * @return podcastName represents the name of the podcast.
+     */    
+    public String getPodcastName(int optionAudio) {
+        String podcastName = "";
+        
+        for (int i = 0; i < audios.size(); i++) {
+            if(audios.get(optionAudio) instanceof Podcast){
+                podcastName = ((Podcast)(audios.get(optionAudio))).getName();
+            }
+        }     
+                
+        return podcastName;
     }
 
     /**
@@ -559,6 +576,32 @@ public class Controller {
         int number = (int) (Math.random() * 9) + 1;
         
         return String.valueOf(number);
+    }
+
+    public int generateRandomNumber(int max, int min) {
+        double opDouble = Math.random() * (max - min + 1) + min;
+        int opInt = (int) opDouble;
+
+        return opInt;
+    }
+
+    public String showAds(int randomAd) {
+        String ad = "";
+
+        switch(randomAd) {
+        case 1:
+            ad = "Nike - Just Do It.";
+            break;
+        case 2:
+            ad = "Coca-Cola - Open Happiness.";
+            break;
+
+        case 3:
+            ad = "M&Ms - Melts in Your Mouth, Not in Your Hands.";
+            break;
+        }
+
+        return ad;
     }
 
     /**

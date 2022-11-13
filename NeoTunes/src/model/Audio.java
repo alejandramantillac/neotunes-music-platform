@@ -1,19 +1,30 @@
 package model;
 
 public abstract class Audio {
+    private String ownerNickname;
     private int type;
     private String name;
     private String url;
     private int duration;
     private double reproductions;
 
-    public Audio(int type, String name, String url, int duration, double reproductions) {
+    public Audio(String ownerNickname, int type, String name, String url, int duration, double reproductions) {
+        this.ownerNickname = ownerNickname;
         this.type = type;
         this.name = name;
         this.url = url;
         this.duration = duration;
         this.reproductions = reproductions;
     }
+
+    public String getOwnerNickname() {
+        return ownerNickname;
+    }
+
+    public void setOwnerNickname(String ownerNickname) {
+        this.ownerNickname = ownerNickname;
+    }
+
 
     public int getType() {
         return type;

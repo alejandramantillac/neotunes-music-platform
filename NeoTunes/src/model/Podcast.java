@@ -5,8 +5,8 @@ public class Podcast extends Audio {
     private String description;
     private String category;
 
-    public Podcast(String description, String category, int type, String name, String url, int duration, double reproductions) {
-        super(type, name, url, duration, reproductions);
+    public Podcast(String description, String category, String ownerNickname, int type, String name, String url, int duration, double reproductions) {
+        super(ownerNickname, type, name, url, duration, reproductions);
         this.description = description;
         this.category = category;
     }
