@@ -18,12 +18,47 @@ public class Controller {
     private ArrayList<Playlist> playlists; 
     private Playlist playlist;
 
+    // delete
+    private Artist artist;
+    private ContentCreator contentc;
+    private Standard standard;
+    private Premium premium;
+    private Song song;
+    private Podcast podcast;
+
+    private int rock = 0;
+    private int pop = 0; 
+    private int trap = 0;
+    private int house = 0; 
+    private int mostListenedPlaysSong = 0;
+
+    private int politics = 0;
+    private int entertainment = 0;
+    private int videogame = 0; 
+    private int fashion = 0;
+    private int mostListenedPlaysPodcast = 0;
+
     public Controller() {
         producers = new ArrayList<Producer>();
         consumers = new ArrayList<Consumer>();
         audios = new ArrayList<Audio>();
         playlists = new ArrayList<Playlist>();
         playlist = new Playlist(TypePlaylist.BOTH,"Default", "Default", "000");
+
+        artist = new Artist("artist", "www", 1, "artist", "1111", "1111");
+        contentc = new ContentCreator("content", "www", 2, "content", "2222", "2222");
+        standard = new Standard(2, 2, 1, "standard", "standard", "1111");
+        premium = new Premium(2, 2, 2, "premium", "premium", "1111");
+        song = new Song("a", "POP", 1.000, 5.0, "artist", 1, "song1", "www", 5, 10);
+        podcast = new Podcast("aaa", "FASHION", "content", 2, "podcast1", "www", 2, 4);
+
+        consumers.add(standard);
+        consumers.add(premium);
+        producers.add(artist);
+        producers.add(contentc);
+        audios.add(song);
+        audios.add(podcast);
+
     }
     
     public ArrayList<Producer> getProducers(){
@@ -207,6 +242,16 @@ public class Controller {
         }
         
         return isEmpty;
+    }
+
+    public void addTotalSongPlays(int songPos) {
+        double currentPlays = audios.get(songPos).getReproductions();
+        audios.get(songPos).setReproductions(currentPlays+1);        
+    }
+
+    public void addTotalPodcastPlays(int podcastPos) {
+        double currentPlays = audios.get(podcastPos).getReproductions();
+        audios.get(podcastPos).setReproductions(currentPlays+1);        
     }
     
     /**
@@ -611,5 +656,217 @@ public class Controller {
         
         return "";
     }
+
+    public String getTotalAccumulatedSongPlays() {
+        String songsList = "";
+        
+        for (int i = 0; i < audios.size(); i++) {
+            if(audios.get(i) instanceof Song){
+                    songsList += (i+1) + ". "+ ((Song)(audios.get(i))).getName() + "Plays: " + ((Song)(audios.get(i))).getReproductions() + "\n";
+            }
+        }
+        
+        return songsList;  
+    }
+
+    public String getTotalAccumulatedPodcastPlays() {
+        String podcastList = "";
+        
+        for (int i = 0; i < audios.size(); i++) {
+            if(audios.get(i) instanceof Podcast){
+                podcastList += (i+1) + ". "+ ((Podcast)(audios.get(i))).getName() + "Plays: " + ((Song)(audios.get(i))).getReproductions() + "\n";
+            }
+        }
+        
+        return podcastList;  
+    }
    
+    public String getMostListenedSongGenre() {
+        String theGenre = "";
+        String mostListened = "";
+
+        
+        for (int i = 0; i < audios.size(); i++) {
+
+            if(audios.get(i) instanceof Song){
+                theGenre = ((Song)(audios.get(i))).getGenre();
+                if(theGenre.equals("ROCK")) {
+                    rock += ((Song)(audios.get(i))).getReproductions();
+                }
+            }
+
+        }
+
+        for (int i = 0; i < audios.size(); i++) {
+
+            if(audios.get(i) instanceof Song){
+                theGenre = ((Song)(audios.get(i))).getGenre();
+                if(theGenre.equals("POP")) {
+                    pop += ((Song)(audios.get(i))).getReproductions();
+                }
+            }
+            
+        }
+
+        for (int i = 0; i < audios.size(); i++) {
+
+            if(audios.get(i) instanceof Song){
+                theGenre = ((Song)(audios.get(i))).getGenre();
+                if(theGenre.equals("TRAP")) {
+                    trap += ((Song)(audios.get(i))).getReproductions();
+                }
+            }
+            
+        }
+
+        for (int i = 0; i < audios.size(); i++) {
+
+            if(audios.get(i) instanceof Song){
+                theGenre = ((Song)(audios.get(i))).getGenre();
+                if(theGenre.equals("HOUSE")) {
+                    house += ((Song)(audios.get(i))).getReproductions();
+                }
+            }
+            
+        }
+
+        if (rock > pop && rock > trap && rock > house) {
+            mostListened = "ROCK";
+        } else if (pop > rock && pop > trap && pop > house) {
+            mostListened = "POP";
+        } else if (trap > rock && trap > pop && trap > house) {
+            mostListened = "TRAP";
+        } else {
+            mostListened = "HOUSE";
+        }
+
+        switch(mostListened) {
+            case "ROCK":
+                mostListenedPlaysSong = rock;
+                break;
+
+            case "POP":
+                mostListenedPlaysSong = pop;
+                break;
+
+            case "TRAP":
+                mostListenedPlaysSong = trap;
+                break;
+
+            case "HOUSE":
+                mostListenedPlaysSong = house;
+                break;
+        }
+
+        return mostListened;
+    }
+
+    public int getmostListenedPlaysSong() {
+        return mostListenedPlaysSong;
+    }
+
+    public String getMostListenedPodcastCategory() {
+        String theCategory = "";
+        String mostListened = "";
+
+        
+        for (int i = 0; i < audios.size(); i++) {
+
+            if(audios.get(i) instanceof Podcast){
+                theCategory = ((Podcast)(audios.get(i))).getCategory();
+                if(theCategory.equals("POLITICS")) {
+                    politics += ((Podcast)(audios.get(i))).getReproductions();
+                }
+            }
+
+        }
+
+        for (int i = 0; i < audios.size(); i++) {
+
+            if(audios.get(i) instanceof Podcast){
+                theCategory = ((Podcast)(audios.get(i))).getCategory();
+                if(theCategory.equals("ENTERTAINMENT")) {
+                    entertainment += ((Podcast)(audios.get(i))).getReproductions();
+                }
+            }
+            
+        }
+
+        for (int i = 0; i < audios.size(); i++) {
+
+            if(audios.get(i) instanceof Podcast){
+                theCategory = ((Podcast)(audios.get(i))).getCategory();
+                if(theCategory.equals("VIDEOGAME")) {
+                    videogame += ((Podcast)(audios.get(i))).getReproductions();
+                }
+            }
+            
+        }
+
+        for (int i = 0; i < audios.size(); i++) {
+
+            if(audios.get(i) instanceof Podcast){
+                theCategory = ((Podcast)(audios.get(i))).getCategory();
+                if(theCategory.equals("FASHION")) {
+                    fashion += ((Podcast)(audios.get(i))).getReproductions();
+                }
+            }
+            
+        }
+
+        if (politics > entertainment && politics > videogame && politics > fashion) {
+            mostListened = "POLITICS";
+        } else if (entertainment > politics && entertainment > videogame && entertainment > fashion) {
+            mostListened = "ENTERTAINMENT";
+        } else if (videogame > politics && videogame > entertainment && videogame > fashion) {
+            mostListened = "VIDEOGAME";
+        } else {
+            mostListened = "FASHION";
+        }
+
+        switch(mostListened) {
+            case "POLITICS":
+                mostListenedPlaysPodcast = politics;
+                break;
+
+            case "ENTERTAINMENT":
+                mostListenedPlaysPodcast = entertainment;
+                break;
+
+            case "VIDEOGAME":
+                mostListenedPlaysPodcast = videogame;
+                break;
+
+            case "FASHION":
+                mostListenedPlaysPodcast = fashion;
+                break;
+        }
+
+        return mostListened;
+    }
+
+    public int getmostListenedPlaysPodcast() {
+        return mostListenedPlaysPodcast;
+    }
+
+
+    public String getSalesInfoOfBestSellingSong() {
+        String songsList = "";
+        int positionBest = 0;
+        int positionNew = 0;
+        double currentSales = ((Song)(audios.get(0))).getSales();
+        double topSales = 0.0;
+        
+        for (int i = 0; i < audios.size(); i++) {
+            if(audios.get(i) instanceof Song){
+                topSales = ((Song)(audios.get(i))).getSales();
+                if (topSales > currentSales) {
+                    positionBest = i;
+                }
+            }
+        }
+        
+        return songsList;        
+    }
+
 }

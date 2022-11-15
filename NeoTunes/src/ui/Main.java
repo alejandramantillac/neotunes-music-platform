@@ -13,11 +13,14 @@ public class Main {
     
     private Controller controller;
     private Message message;
+
+
     
     public Main() {
         scan = new Scanner(System.in);
         controller = new Controller();
         message = new Message();
+
     }
 
     public Scanner getScan() {
@@ -635,7 +638,7 @@ public class Main {
      */           
     public void playAudio() {
         boolean isOnRange;
-        String uNickname, showAd;
+        String uNickname, showAd, songName;
         int userPos, cType, optionSong, maxRange, count = 0, randomAd, optionAudio;
         
         System.out.println("Type the nickname of the user: ");
@@ -672,9 +675,13 @@ public class Main {
                                     showAd = controller.showAds(randomAd);
                                     
                                     System.out.println("Ad: " + showAd);
-                                    System.out.println("Playing song: " + controller.getSongName(optionSong));
+                                    songName = controller.getSongName(optionSong);
+                                    System.out.println("Playing song: " + songName);
+                                    controller.addTotalSongPlays(optionSong);
                                 } else {
-                                    System.out.println("Playing song: " + controller.getSongName(optionSong));
+                                    songName = controller.getSongName(optionSong);
+                                    System.out.println("Playing song: " + songName);
+                                    controller.addTotalSongPlays(optionSong);
                                 }
                                 
                                 ++count;
@@ -694,6 +701,7 @@ public class Main {
                         
                         if (isOnRange) {
                             System.out.println("Playing song: " + controller.getSongName(optionSong));
+                            controller.addTotalSongPlays(optionSong);
                         } else {
                             System.out.println(message.msgOutRange());
                         }
@@ -725,8 +733,10 @@ public class Main {
                                     
                                     System.out.println("Ad: " + showAd);
                                     System.out.println("Playing podcast: " + controller.getPodcastName(optionSong));
+                                    controller.addTotalPodcastPlays(optionSong);
                                 } else {
                                     System.out.println("Playing podcast: " + controller.getPodcastName(optionSong));
+                                    controller.addTotalPodcastPlays(optionSong);
                                 }
                                 count++;
                                 
@@ -747,6 +757,7 @@ public class Main {
                             
                             if (isOnRange) {
                                 System.out.println("Playing podcast: " + controller.getPodcastName(optionSong));
+                                controller.addTotalPodcastPlays(optionSong);
                             } else {
                                 System.out.println(message.msgOutRange());
                             }
@@ -819,21 +830,25 @@ public class Main {
      * getTotalAccumulatedPlays
      */          
     public void getTotalAccumulatedPlays() {
-        
+        System.out.println("Songs: \n" + controller.getTotalAccumulatedSongPlays());
+
+        System.out.println("Podcasts: \n" + controller.getTotalAccumulatedPodcastPlays());
     }
     
     /**
      * getMostListenedSongGenre
      */           
     public void getMostListenedSongGenre() {
-        
+        // all platform
+        System.out.println("The most listened song genre is: " + controller.getMostListenedSongGenre() + "with " + controller.getmostListenedPlaysSong() + "plays. ");
     }
     
     /**
      * getMostListenedPodcastCategory
      */           
     public void getMostListenedPodcastCategory() {
-        
+        // all platform
+        System.out.println("The most listened podcast category is: " + controller.getMostListenedPodcastCategory() + "with " + controller.getmostListenedPlaysPodcast() + "plays. ");       
     }
     
     /**
@@ -860,7 +875,7 @@ public class Main {
     /**
      * getSalesInfoOfBestSellingSong
      */           
-    public void  getSalesInfoOfBestSellingSong() {
+    public void getSalesInfoOfBestSellingSong() {
         
     }
     

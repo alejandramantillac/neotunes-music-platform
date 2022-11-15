@@ -62,7 +62,7 @@ public abstract class Audio {
         return reproductions;
     }
 
-    public void setReproductions(int reproductions) {
+    public void setReproductions(double reproductions) {
         this.reproductions = reproductions;
     }
 
