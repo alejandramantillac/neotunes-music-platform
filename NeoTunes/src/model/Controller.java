@@ -18,6 +18,8 @@ public class Controller {
     private ArrayList<Playlist> playlists; 
     private Playlist playlist;
 
+
+
     // delete
     private Artist artist;
     private ContentCreator contentc;
@@ -37,6 +39,23 @@ public class Controller {
     private int videogame = 0; 
     private int fashion = 0;
     private int mostListenedPlaysPodcast = 0;
+
+    private double rockTotalSales = 0;
+    private double popTotalSales = 0;
+    private double trapTotalSales = 0;
+    private double houseTotalSales = 0;
+
+    private double rockCostsSales = 0;
+    private double popCostsSales = 0;
+    private double trapCostsSales = 0;
+    private double houseCostsSales = 0;
+
+    private double rockProfits = 0;
+    private double popProfits = 0;
+    private double trapProfits = 0;
+    private double houseProfits = 0;   
+
+
 
     public Controller() {
         producers = new ArrayList<Producer>();
@@ -244,11 +263,19 @@ public class Controller {
         return isEmpty;
     }
 
+    /**
+     * addTotalSongPlays adds one more playback to a song when a user plays it.
+     * @param songPos represents the position of the song.
+     */
     public void addTotalSongPlays(int songPos) {
         double currentPlays = audios.get(songPos).getReproductions();
         audios.get(songPos).setReproductions(currentPlays+1);        
     }
 
+    /**
+     * addTotalPodcastPlays adds one more playback to a podcast when a user plays it.
+     * @param podcastPos represents the position of the podcast.
+     */
     public void addTotalPodcastPlays(int podcastPos) {
         double currentPlays = audios.get(podcastPos).getReproductions();
         audios.get(podcastPos).setReproductions(currentPlays+1);        
@@ -581,7 +608,7 @@ public class Controller {
     /**
      * deletePlaylistAudio deletes an audio from a playlist.
      * @param pPos represents the audio's position.
-     * @return  
+     * @return pPos
      */    
     public String deletePlaylistAudio(int pPos) {
         return playlist.deletePlaylistAudio(pPos);
@@ -615,7 +642,7 @@ public class Controller {
     
     /**
      * generateRandomStringNumber generates a random number and converts it to String data type.
-     * @return 
+     * @return number represents the string number.
      */    
     public String generateRandomStringNumber() {
         int number = (int) (Math.random() * 9) + 1;
@@ -623,6 +650,12 @@ public class Controller {
         return String.valueOf(number);
     }
 
+    /**
+     * generateRandomNumber generates a random number according to a range.
+     * @param max represents the maximun value.
+     * @param min represents the minimun value.
+     * @return opInt represents the result.
+     */
     public int generateRandomNumber(int max, int min) {
         double opDouble = Math.random() * (max - min + 1) + min;
         int opInt = (int) opDouble;
@@ -630,6 +663,11 @@ public class Controller {
         return opInt;
     }
 
+    /**
+     * showAds show the ads to the standard consumer user.
+     * @param randomAd show an specific add according to a random number.
+     * @return ad represents the ad.
+     */
     public String showAds(int randomAd) {
         String ad = "";
 
@@ -650,37 +688,100 @@ public class Controller {
     }
 
     /**
-     * generateMatriz
+     * generateMatrix creates the matrix.
+     * @return matrixId represents the matrix id.
      */    
-    public String generateMatrix() {
+    public String [][] generateMatrix() {
+
+        String matrixId[][] = new String[6][6];
         
-        return "";
+        for(int i=0; i<6; i++){
+            for(int j=0; i<6; i++){
+                matrixId[i][j] = generateRandomStringNumber();
+            }
+        }
+
+        return matrixId;
+        
     }
 
+
+
+    /**
+     * generateMatrixCode generates an id code.
+     * @param matrixId represents the matrix.
+     * @return code represents the id code.
+     */
+    public String generateMatrixCode(String[][] matrixId) {
+        String code = "";
+
+        for (int i = 0; i < matrixId.length; i++) { 
+            for (int j = 0; j < matrixId[i].length; j++) {
+                if (matrixId[i][j] != null ) {
+                    code += matrixId[i][j];
+                    code += matrixId[i][j];
+                    code += matrixId[i][j];
+                }
+        }
+      }
+  
+      return code;
+    }
+
+    /**
+     * showPlaylistId show the id of a playlist.
+     * @param pName represents the name of the playlist.
+     * @return pId represents the id code of the playlist.
+     */
+    public String showPlaylistId(String pName) {
+        String pId = "";
+
+        for(int i = 0; i < playlists.size(); i++) {
+            if (playlists.get(i).getName().equals(pName)) {
+                pId = playlists.get(i).getNumericCode();
+            }
+
+        }
+
+        return pId;
+    }
+
+    /**
+     * getTotalAccumulatedSongPlays gets the total number of plays of all songs.
+     * @return songsList represents the list of the songs.
+     */
     public String getTotalAccumulatedSongPlays() {
         String songsList = "";
         
         for (int i = 0; i < audios.size(); i++) {
             if(audios.get(i) instanceof Song){
-                    songsList += (i+1) + ". "+ ((Song)(audios.get(i))).getName() + "Plays: " + ((Song)(audios.get(i))).getReproductions() + "\n";
+                songsList += "Total plays: " + ((Song)(audios.get(i))).getReproductions();
             }
         }
         
         return songsList;  
     }
 
+    /**
+     * getTotalAccumulatedPodcastPlays gets the total number of plays of all podcasts.
+     * @return podcastList represents the list of the podcasts.
+     */
     public String getTotalAccumulatedPodcastPlays() {
         String podcastList = "";
         
         for (int i = 0; i < audios.size(); i++) {
             if(audios.get(i) instanceof Podcast){
-                podcastList += (i+1) + ". "+ ((Podcast)(audios.get(i))).getName() + "Plays: " + ((Song)(audios.get(i))).getReproductions() + "\n";
+                podcastList += "Total plays: " + ((Podcast)(audios.get(i))).getReproductions();
             }
         }
         
         return podcastList;  
     }
    
+   /**
+    * getMostListenedSongGenre gets the most listened song genre on the platform.
+    * @return mostListened represents the genre most listened.
+    */
     public String getMostListenedSongGenre() {
         String theGenre = "";
         String mostListened = "";
@@ -761,10 +862,18 @@ public class Controller {
         return mostListened;
     }
 
+    /**
+     * getmostListenedPlaysSong gets the number of plays of the most listened song.
+     * @return mostListenedPlaysSong represents the number of plays of the most listened song.
+     */
     public int getmostListenedPlaysSong() {
         return mostListenedPlaysSong;
     }
 
+    /**
+     * getMostListenedPodcastCategory gets the most listened podcast category on the platform.
+     * @return mostListened represents the podcast category most listened.
+     */
     public String getMostListenedPodcastCategory() {
         String theCategory = "";
         String mostListened = "";
@@ -845,13 +954,20 @@ public class Controller {
         return mostListened;
     }
 
+    /**
+     * getmostListenedPlaysPodcast gets the number of plays of the most listened podcast.
+     * @return mostListenedPlaysPodcast represents the number of plays of the most listened podcast.
+     */
     public int getmostListenedPlaysPodcast() {
         return mostListenedPlaysPodcast;
     }
 
 
-    public String getSalesInfoOfBestSellingSong() {
-        String songsList = "";
+    /**
+     * getPositionOfBestSellingSong gets the position of the best selling song.
+     * @return positionBest represents the position of the song.
+     */
+    public int getPositionOfBestSellingSong() {
         int positionBest = 0;
         int positionNew = 0;
         double currentSales = ((Song)(audios.get(0))).getSales();
@@ -866,7 +982,171 @@ public class Controller {
             }
         }
         
-        return songsList;        
+        return positionBest;        
     }
+
+    /**
+     * getTotalSalesBestSellingSong gets the total sales of the best selling song.
+     * @param positionBest represents the position of the song.
+     * @return totalSales represents the total sales of the song.
+     */
+    public double getTotalSalesBestSellingSong(int positionBest) {
+        double totalSales = 0;
+
+        if(audios.get(positionBest) instanceof Song){
+            totalSales = ((Song)(audios.get(positionBest))).getSales();
+        }
+
+        return totalSales;
+    }
+
+    /**
+     * getCostBestSellingSong gets the cost of the best selling song.
+     * @param positionBest represents the position of the song.
+     * @return totalCost represents the cost of the song.
+     */
+    public double getCostBestSellingSong(int positionBest) {
+        double totalCost = 0;
+
+        if(audios.get(positionBest) instanceof Song){
+            totalCost = ((Song)(audios.get(positionBest))).getCost();
+        }
+
+        return totalCost;
+    }
+
+    /**
+     * getNameBestSellingSong gets the name of the best selling song.
+     * @param positionBest represents the position of the song.
+     * @return nameSong represents the name of the song.
+     * */
+    public String getNameBestSellingSong(int positionBest) {
+        String nameSong = "";
+        if(audios.get(positionBest) instanceof Song){
+            nameSong = ((Song)(audios.get(positionBest))).getName();
+        }
+
+        return nameSong;
+    }
+
+    /**
+     * getSongsSoldByGenre calculates the total amount of sales for each song genre.
+     */
+    public void getSongsSoldByGenre() {
+        String theGenre = "";
+
+        for (int i = 0; i < audios.size(); i++) {
+            if(audios.get(i) instanceof Song){
+                theGenre = ((Song)(audios.get(i))).getGenre();
+                if(theGenre.equals("ROCK")) {
+                    rockTotalSales += ((Song)(audios.get(i))).getSales();
+                } else if(theGenre.equals("POP")) {
+                    popTotalSales += ((Song)(audios.get(i))).getSales();
+                } else if(theGenre.equals("TRAP")) {
+                    trapTotalSales += ((Song)(audios.get(i))).getSales();
+                } else {
+                    houseTotalSales += ((Song)(audios.get(i))).getSales();
+                }
+            }
+        }
+    }
+
+    /**
+     * getSongsCostsByGenre calculates the total amount of earnings for each song genre.
+     */
+    public void getSongsCostsByGenre() {
+        String theGenre = "";
+
+        for (int i = 0; i < audios.size(); i++) {
+            if(audios.get(i) instanceof Song){
+                theGenre = ((Song)(audios.get(i))).getGenre();
+                if(theGenre.equals("ROCK")) {
+                    rockCostsSales += ((Song)(audios.get(i))).getCost();
+                } else if(theGenre.equals("POP")) {
+                    popCostsSales += ((Song)(audios.get(i))).getCost();
+                } else if(theGenre.equals("TRAP")) {
+                    trapCostsSales += ((Song)(audios.get(i))).getCost();
+                } else {
+                    houseCostsSales += ((Song)(audios.get(i))).getCost();
+                }
+            }
+        }
+    }
+
+    /**
+     * calculateProfitsByGenre calculates the sales revenue for each song genre.
+     */
+    public void calculateProfitsByGenre() {
+        rockProfits = rockTotalSales * rockCostsSales;
+        popProfits = popTotalSales * popCostsSales;
+        trapProfits = trapTotalSales * trapCostsSales;
+        houseProfits = houseTotalSales * houseCostsSales;
+    }
+
+    /**
+     * getRockSales obtains the number of total sales of the rock genre.
+     * @return rockTotalSales represents the total sales.
+     */
+    public double getRockSales() {
+        return rockTotalSales;
+    }
+
+    /**
+     * getPopSales obtains the number of total sales of the pop genre.
+     * @return popTotalSales represents the total sales.
+     */
+    public double getPopSales() {
+        return popTotalSales;
+    }
+
+    /**
+     * getTrapSales obtains the number of total sales of the trap genre.
+     * @return trapTotalSales represents the total sales.
+     */
+    public double getTrapSales() {
+        return trapTotalSales;
+    }
+
+    /**
+     * getHouseSales obtains the number of total sales of the house genre.
+     * @return houseTotalSales represents the total sales.
+     */
+    public double getHouseSales() {
+        return houseTotalSales;
+    }    
+
+    /**
+     * getRockProfits obtains the total sales in the rock genre.
+     * @return rockProfits represents the profits of the genre.
+     */
+    public double getRockProfits() {
+        return rockProfits;
+    }
+
+    /**
+     * getPopProfits obtains the total sales in the pop genre.
+     * @return popProfits represents the profits of the genre.
+     */
+    public double getPopProfits() {
+        return popProfits;
+    }
+
+    /**
+     * getTrapProfits obtains the total sales in the trap genre.
+     * @return trapProfits represents the profits of the genre.
+     */
+    public double getTrapProfits() {
+        return trapProfits;
+    }
+
+    /**
+     * getHouseProfits obtains the total sales in the house genre.
+     * @return houseProfits represents the profits of the genre.
+     */
+    public double getHouseProfits() {
+        return houseProfits;
+    }
+
+
 
 }

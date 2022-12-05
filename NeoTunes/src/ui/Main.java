@@ -440,7 +440,6 @@ public class Main {
         if (ownerPos != -1) {
             
             cType = controller.getConsumerType(ownerPos);
-            System.out.println("ctype is "+ cType);
 
             if (cType == 1) {
                 isNotFull = controller.checkStandardConsumerTotalPlaylists(ownerPos);
@@ -459,7 +458,10 @@ public class Main {
                 isOnRange = controller.validateRange(optionPlaylist, 1, 3);
 
                 if (isOnRange) {
-                    pCode = "0";
+                    String [][] pMatrix = controller.generateMatrix();
+                    pCode = controller.generateMatrixCode(pMatrix);
+
+                    System.out.println("Copy the playlist id: " + pCode);
 
                     switch(optionPlaylist) {
                         case 1:
@@ -630,7 +632,33 @@ public class Main {
      * sharePlaylist
      */           
     public void sharePlaylist() {
+        String uNickname;
+        int userPos;
+
+        System.out.println("Type the nickname of the user: ");
+        uNickname = scan.next();
         
+        userPos = controller.checkUserNickname(uNickname, 1);
+        
+        if (userPos != -1) {
+            System.out.println("These are the playlists of the user " + uNickname + ": \n" + controller.showPlaylistsConsumerUser(uNickname));            
+            
+            System.out.println("Type the playlist name that you want to share: ");
+            String pName = scan.next();
+
+            int pPos = controller.checkPlaylistOwner(pName, uNickname);
+
+            if (pPos != -1) {
+                System.out.println("Playlist id: " + controller.showPlaylistId(pName));
+                System.out.println("matrix: ");
+            } else {
+                System.out.println(message.msgErrorNameNotFound());
+            }
+
+        } else {
+            System.out.println(message.msgErrorNameNotFound());
+        }
+
     }
     
     /**
@@ -665,46 +693,60 @@ public class Main {
                             System.out.println("Select a song of the list: \n" + controller.listAllSongs() + "\nor if you want to back to main menu type 0");
                             optionSong = scan.nextInt()-1;
                             maxRange = controller.countAllSongs();
-                            isOnRange = controller.validateRange(optionSong, -1, maxRange);      
-                            
-                            if (isOnRange) {
-                                
-                                if (count != 1 && count%3 == 0) {
-                                    randomAd = controller.generateRandomNumber(3,1);
+                            isOnRange = controller.validateRange(optionSong, -1, maxRange);  
 
-                                    showAd = controller.showAds(randomAd);
-                                    
-                                    System.out.println("Ad: " + showAd);
-                                    songName = controller.getSongName(optionSong);
-                                    System.out.println("Playing song: " + songName);
-                                    controller.addTotalSongPlays(optionSong);
-                                } else {
-                                    songName = controller.getSongName(optionSong);
-                                    System.out.println("Playing song: " + songName);
-                                    controller.addTotalSongPlays(optionSong);
-                                }
-                                
-                                ++count;
+                            if(optionSong == -1) {
+                                System.out.println("Playing finished");
                             } else {
-                                System.out.println(message.msgOutRange());
-                            }
+                               if (isOnRange) {
+                                    
+                                    if (count != 0 && count%3 == 0) {
+                                        randomAd = controller.generateRandomNumber(3,1);
+
+                                        showAd = controller.showAds(randomAd);
+                                        
+                                        System.out.println("Ad: " + showAd);
+                                        songName = controller.getSongName(optionSong);
+                                        System.out.println("Playing song: " + songName);
+                                        controller.addTotalSongPlays(optionSong);
+                                    } else {
+                                        songName = controller.getSongName(optionSong);
+                                        System.out.println("Playing song: " + songName);
+                                        controller.addTotalSongPlays(optionSong);
+                                    }
+                                    
+                                    ++count;
+                                } else {
+                                    System.out.println(message.msgOutRange());
+                                }
+                            } 
+                            
                             
                         } while (optionSong != -1);   
                         break;
                         
                     case 2:
                         // premium
-                        System.out.println("Select a song of the list: \n" + controller.listAllSongs());
-                        optionSong = scan.nextInt()-1;
-                        maxRange = controller.countAllSongs();
-                        isOnRange = controller.validateRange(optionSong, -1, maxRange);
-                        
-                        if (isOnRange) {
-                            System.out.println("Playing song: " + controller.getSongName(optionSong));
-                            controller.addTotalSongPlays(optionSong);
-                        } else {
-                            System.out.println(message.msgOutRange());
-                        }
+
+                        do {
+                            System.out.println("Select a song of the list: \n" + controller.listAllSongs() + "\nor if you want to back to main menu type 0");
+                            optionSong = scan.nextInt()-1;
+                            maxRange = controller.countAllSongs();
+                            isOnRange = controller.validateRange(optionSong, -1, maxRange);
+                            
+                            if(optionSong == -1) {
+                                System.out.println("Playing finished");  
+                            } else {
+                                if (isOnRange) {
+                                    System.out.println("Playing song: " + controller.getSongName(optionSong));
+                                    controller.addTotalSongPlays(optionSong);
+                                } else {
+                                    System.out.println(message.msgOutRange());
+                                }                            
+                            }                                
+                        } while (optionSong != -1);
+               
+
                         
                         break;
                 }
@@ -723,26 +765,30 @@ public class Main {
                             optionSong = scan.nextInt()-1;
                             maxRange = controller.countAllPodcasts();
                             isOnRange = controller.validateRange(optionSong, -1, maxRange);      
-                            
-                            if (isOnRange) {
 
-                                if (count%2 == 0) {
-                                    randomAd = controller.generateRandomNumber(3,1);
-
-                                    showAd = controller.showAds(randomAd);
-                                    
-                                    System.out.println("Ad: " + showAd);
-                                    System.out.println("Playing podcast: " + controller.getPodcastName(optionSong));
-                                    controller.addTotalPodcastPlays(optionSong);
-                                } else {
-                                    System.out.println("Playing podcast: " + controller.getPodcastName(optionSong));
-                                    controller.addTotalPodcastPlays(optionSong);
-                                }
-                                count++;
-                                
+                            if (optionSong == -1) {
+                                System.out.println("Playing finished.");
                             } else {
-                                System.out.println(message.msgOutRange());
+                               if (isOnRange) {
+                                    if (count%2 == 0) {
+                                        randomAd = controller.generateRandomNumber(3,1);
+
+                                        showAd = controller.showAds(randomAd);
+                                        
+                                        System.out.println("Ad: " + showAd);
+                                        System.out.println("Playing podcast: " + controller.getPodcastName(optionSong));
+                                        controller.addTotalPodcastPlays(optionSong);
+                                    } else {
+                                        System.out.println("Playing podcast: " + controller.getPodcastName(optionSong));
+                                        controller.addTotalPodcastPlays(optionSong);
+                                    }
+                                    count++;
+                                    
+                                } else {
+                                    System.out.println(message.msgOutRange());
+                                }
                             }
+                            
                             
                         } while (optionSong != -1);   
                         
@@ -750,17 +796,26 @@ public class Main {
 
                     case 2:
                         // premium
-                            System.out.println("Select a podcast of the list: \n" + controller.listAllPodcasts());
+                        do {
+                            System.out.println("Select a podcast of the list: \n" + controller.listAllPodcasts() + "\n or type 0 if you want to back to main menu");
                             optionSong = scan.nextInt()-1;
                             maxRange = controller.countAllPodcasts();
                             isOnRange = controller.validateRange(optionSong, -1, maxRange);
                             
-                            if (isOnRange) {
-                                System.out.println("Playing podcast: " + controller.getPodcastName(optionSong));
-                                controller.addTotalPodcastPlays(optionSong);
+                            if (optionSong == -1) {
+                                System.out.println("Playing finished.");
                             } else {
-                                System.out.println(message.msgOutRange());
+                                if (isOnRange) {
+                                    System.out.println("Playing podcast: " + controller.getPodcastName(optionSong));
+                                    controller.addTotalPodcastPlays(optionSong);
+                                } else {
+                                    System.out.println(message.msgOutRange());
+                                }                                 
                             }
+                    
+
+                        } while(optionSong != -1);
+
                         break;
                 }
             }
@@ -840,7 +895,7 @@ public class Main {
      */           
     public void getMostListenedSongGenre() {
         // all platform
-        System.out.println("The most listened song genre is: " + controller.getMostListenedSongGenre() + "with " + controller.getmostListenedPlaysSong() + "plays. ");
+        System.out.println("The most listened song genre is: " + controller.getMostListenedSongGenre() + " with " + controller.getmostListenedPlaysSong() + " plays. ");
     }
     
     /**
@@ -869,14 +924,27 @@ public class Main {
      * getSongSalesInfoByGenre
      */           
     public void getSongSalesInfoByGenre() {
-        
+        controller.getSongsSoldByGenre();
+        controller.getSongsCostsByGenre();
+        controller.calculateProfitsByGenre();
+
+        System.out.println("# Rock \n" + "Number of songs sold:" + controller.getRockSales() + " \n Total sales value: " + controller.getRockProfits());
+        System.out.println("# Pop \n" + "Number of songs sold:" + controller.getPopSales() + " \n Total sales value: " + controller.getPopProfits());
+        System.out.println("# Trap \n" + "Number of songs sold:" + controller.getTrapSales() + " \n Total sales value: " + controller.getTrapProfits());
+        System.out.println("# House \n" + "Number of songs sold:" + controller.getHouseSales() + " \n Total sales value: " + controller.getHouseProfits());
+
     }
 
     /**
      * getSalesInfoOfBestSellingSong
      */           
     public void getSalesInfoOfBestSellingSong() {
-        
+        int positionBest = controller.getPositionOfBestSellingSong();
+        double totalSales = controller.getTotalSalesBestSellingSong(positionBest);
+        double totalCost = controller.getCostBestSellingSong(positionBest);
+        String songName = controller.getNameBestSellingSong(positionBest);
+
+        System.out.println("Best selling song: " + songName + "\n" + ". Total sales: " + totalSales + "\n" + "Total value (money): " + totalCost);
     }
     
     /**
